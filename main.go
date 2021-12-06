@@ -52,7 +52,7 @@ func init() {
 func main() {
 	cl, err := cli.ParseCommandLine(os.Args[0], os.Args[1:])
 	if err != nil {
-		setupLog.Error(err, "could not parse command-line arguments")
+		setupLog.Error(err, "couldd not parse command-line arguments")
 		os.Exit(1)
 	}
 
