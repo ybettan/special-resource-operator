@@ -23,8 +23,10 @@ COPY api/ api/
 COPY cmd/ cmd/
 COPY controllers/ controllers/
 COPY pkg/ pkg/
+COPY charts/ charts/
+COPY config/ config/
 
-RUN ["make", "manager", "helm-plugins/cm-getter/cm-getter"]
+RUN ["make", "helm-repo-index", "manager", "helm-plugins/cm-getter/cm-getter"]
 
 FROM debian:bullseye-slim
 
@@ -37,8 +39,8 @@ ENV HELM_PLUGINS /opt/helm-plugins
 
 COPY --from=builder /workspace/manager .
 COPY --from=builder /workspace/helm-plugins ${HELM_PLUGINS}
-
-COPY build/charts/ /charts/
+COPY --from=builder /workspace/build/charts /
+COPY --from=builder /workspace/config .
 
 RUN useradd  -r -u 499 nonroot
 RUN getent group nonroot || groupadd -o -g 499 nonroot
