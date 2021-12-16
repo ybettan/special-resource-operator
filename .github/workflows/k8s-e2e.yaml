@@ -77,6 +77,11 @@ jobs:
       env:
         TAG: pr-${{ steps.short-sha.outputs.sha }}
         PLATFORM: k8s
+    - run: |
+        kubectl describe deploy/special-resource-controller-manager -n openshift-special-resource-operator
+        kubectl logs deploy/special-resource-controller-manager -n openshift-special-resource-operator -c manager
+        kubectl describe pod/$(kubectl get pods -n openshift-special-resource-operator | tail -n1 | cut -d" " -f1) -n openshift-special-resource-operator
+        kubectl logs pod/$(kubectl get pods -n openshift-special-resource-operator | tail -n1 | cut -d" " -f1) -n openshift-special-resource-operator -c manager
     - run: kubectl rollout status deployment -n openshift-special-resource-operator special-resource-controller-manager --timeout=300s
 
     - run: kubectl apply -f  charts/example/centos-simple-kmod-0.0.1/centos-simple-kmod.yaml
