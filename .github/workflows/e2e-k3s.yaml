@@ -1,0 +1,47 @@
+name: e2e-k3s
+
+on:
+  pull_request:
+    types: [labeled]
+    paths-ignore:
+      - "**/README.md"
+
+jobs:
+
+  e2e-k3s:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.label.name == 'ok-to-test' || github.event.pull_request.head.repo.full_name == 'openshift-psap/special-resource-operator' }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.17.2'
+      - name: Build the image
+        env:
+          TAG: pull-${{ github.event.number }}
+        run: make local-image-build CONTAINER_COMMAND=docker
+      - name: Create a k3s cluster
+        uses: AbsaOSS/k3d-action@v2
+        with:
+          cluster-name: "sro-cluster"
+      - name: Inject the built images to the cluster
+        env:
+          TAG: pull-${{ github.event.number }}
+        run: k3d image import quay.io/openshift-psap/special-resource-operator:$TAG -c sro-cluster
+      - name: Deploying SRO
+        env:
+          TAG: pull-${{ github.event.number }}
+          PLATFORM: k8s
+        run: |
+          kubectl cluster-info
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/v0.8.2/nfd-master.yaml.template
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/v0.8.2/nfd-worker-daemonset.yaml.template
+          kubectl rollout status deployment -n node-feature-discovery nfd-master
+          kubectl rollout status daemonset -n node-feature-discovery nfd-worker
+          kubectl get pods -n node-feature-discovery
+          make go-deploy-manifests
+          for i in rang {1..20}; do echo hello; sleep 1; done
+          kubectl rollout status deployment -n openshift-special-resource-operator special-resource-controller-manager --timeout=300s
+          kubectl apply -f  charts/example/centos-simple-kmod-0.0.1/centos-simple-kmod.yaml
+          sleep 360
+          kubectl logs `kubectl get pod -n openshift-special-resource-operator | grep special | awk '{ print $1 }'` -c manager -n openshift-special-resource-operator
