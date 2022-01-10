@@ -55,6 +55,7 @@ var (
 
 func init() {
 
+	//comment
 	utilruntime.Must(sroscheme.AddToScheme(scheme))
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 	utilruntime.Must(srov1beta1.AddToScheme(scheme))
