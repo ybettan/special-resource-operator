@@ -40,7 +40,6 @@ jobs:
           kubectl rollout status daemonset -n node-feature-discovery nfd-worker
           kubectl get pods -n node-feature-discovery
           make go-deploy-manifests
-          for i in rang {1..20}; do echo hello; sleep 1; done
           kubectl rollout status deployment -n openshift-special-resource-operator special-resource-controller-manager --timeout=300s
           kubectl apply -f  charts/example/centos-simple-kmod-0.0.1/centos-simple-kmod.yaml
           sleep 360
