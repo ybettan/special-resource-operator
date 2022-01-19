@@ -6,7 +6,7 @@ deployment:
 #FIXME: Add OCP objects to the deployment
 #FIXME: set special-resource-operator as the default namespace
 #FIXME: delete namesapce on chart uninstall
-#FIXME: set 'sro-' prefix to all resources
 #FIXME: add subchart for NFD
 #FIXME: Update Your Deployments When ConfigMaps or Secrets Change
 #FIXME: should we find a way to delete CRDs (not CRs) uppon chart uninstall?
+#FIXME: make sure the labels names are consistent with all the rest

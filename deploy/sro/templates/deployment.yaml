@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
+  name: {{ .Release.Name }}-manager-controller
   labels:
     control-plane: controller-manager
 spec:
@@ -55,5 +55,5 @@ spec:
           emptyDir: {}
         - name: cred-volume
           emptyDir: {}
-      serviceAccountName: controller-manager
+      serviceAccountName: {{ .Release.Name }}-manager-service-account
       terminationGracePeriodSeconds: 10
