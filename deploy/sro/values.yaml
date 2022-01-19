@@ -3,9 +3,9 @@ deployment:
     name: quay.io/openshift-psap/special-resource-operator
     tag: master
 
+#FIXME: Add OCP objects to the deployment
 #FIXME: set special-resource-operator as the default namespace
 #FIXME: delete namesapce on chart uninstall
-#FIXME: deploy CR as well
 #FIXME: set 'sro-' prefix to all resources
 #FIXME: add subchart for NFD
 #FIXME: Update Your Deployments When ConfigMaps or Secrets Change
