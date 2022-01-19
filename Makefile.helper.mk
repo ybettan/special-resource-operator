@@ -4,7 +4,7 @@
 SPECIALRESOURCE  ?= driver-container-base
 NAMESPACE        ?= openshift-special-resource-operator
 PULLPOLICY       ?= IfNotPresent
-TAG              ?= $(shell git rev-parse --abbrev-ref HEAD)
+TAG              ?= master
 CSPLIT           ?= csplit - --prefix="" --suppress-matched --suffix-format="%04d.yaml"  /---/ '{*}' --silent
 YAMLFILES        ?= $(shell  find manifests charts -name "*.yaml"  -not \( -path "charts/lustre/lustre-aws-fsx-0.0.1/csi-driver/*" -prune \)  -not \( -path "charts/*/shipwright-*/*" -prune \) -not \( -path "charts/experimental/*" -prune \) )
 PLATFORM         ?= ""
