@@ -63,7 +63,7 @@ all: $(SPECIALRESOURCE)
 ##@ Development
 
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
-	$(CONTROLLER_GEN) $(CRD_OPTIONS) rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	$(CONTROLLER_GEN) $(CRD_OPTIONS) rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=deploy/sro/crds
 
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
@@ -107,38 +107,17 @@ generate-mocks:
 
 ##@ Deployment
 
-install: manifests kustomize  ## Install CRDs into the K8s cluster specified in ~/.kube/config.
-	$(KUSTOMIZE) build config/crd | $(CLUSTER_CLIENT) apply -f -
-
-uninstall: manifests kustomize  ## Uninstall CRDs from the K8s cluster specified in ~/.kube/config.
-	$(KUSTOMIZE) build config/crd | $(CLUSTER_CLIENT) delete -f -
-
-deploy: manifests kustomize configure ## Deploy controller in the configured Kubernetes cluster in ~/.kube/config
-	$(KUSTOMIZE) build config/namespace | $(CLUSTER_CLIENT) apply -f -
-	$(KUSTOMIZE) build config/default$(SUFFIX) | $(CLUSTER_CLIENT) apply -f -
-	$(shell sleep 5)
-	$(KUSTOMIZE) build config/cr | $(CLUSTER_CLIENT) apply -f -
+deploy: manifests ## Deploy controller in the configured Kubernetes cluster in ~/.kube/config
+	helm install sro deploy/sro/ -n special-resource-operator --create-namespace \
+		--set deployment.image.name=quay.io/openshift-psap/special-resource-operator \
+		--set deployment.image.tag=$(TAG)
 
 # If the CRD is deleted before the CRs the CRD finalizer will hang forever
 # The specialresource finalizer will not execute either
-undeploy: kustomize ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
-	if [ ! -z "$$($(CLUSTER_CLIENT) get crd | grep specialresource)" ]; then         \
-		$(CLUSTER_CLIENT) delete --ignore-not-found sr --all;                    \
-	fi;
-	# Give SRO time to reconcile
-	sleep 10
-	$(KUSTOMIZE) build config/namespace | $(CLUSTER_CLIENT) delete --ignore-not-found -f -
-	$(KUSTOMIZE) build config/default$(SUFFIX) | $(CLUSTER_CLIENT) delete --ignore-not-found -f -
-
-
-# SRO specific configuration to set namespace of all manifests
-configure:
-	# TODO kustomize cannot set name of namespace according to settings, hack TODO
-	cd config/namespace && sed -i 's/name: .*/name: $(NAMESPACE)/g' namespace.yaml
-	cd config/namespace && $(KUSTOMIZE) edit set namespace $(NAMESPACE)
-	cd config/default && $(KUSTOMIZE) edit set namespace $(NAMESPACE)
-	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
-
+undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
+	helm uninstall sro -n special-resource-operator
+	$(CLUSTER_CLIENT) delete crd/specialresources.sro.openshift.io #FIXME remove once I configure helm to remove CRDs
+	$(CLUSTER_CLIENT) delete ns/special-resource-operator #FIXME remove once I configure helm to remove namespace on uninstall
 
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 controller-gen: ## Download controller-gen locally if necessary.

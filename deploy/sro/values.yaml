@@ -4,6 +4,7 @@ deployment:
     tag: master
 
 #FIXME: set special-resource-operator as the default namespace
+#FIXME: delete namesapce on chart uninstall
 #FIXME: deploy CR as well
 #FIXME: set 'sro-' prefix to all resources
 #FIXME: add subchart for NFD
