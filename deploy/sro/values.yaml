@@ -8,3 +8,4 @@ deployment:
 #FIXME: set 'sro-' prefix to all resources
 #FIXME: add subchart for NFD
 #FIXME: Update Your Deployments When ConfigMaps or Secrets Change
+#FIXME: should we find a way to delete CRDs (not CRs) uppon chart uninstall?
