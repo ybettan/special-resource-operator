@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-manager
+  labels:
+    control-plane: controller-manager
+spec:
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 499
+        runAsGroup: 499
+      containers:
+        - imagePullPolicy: Always # TODO
+          env:
+            - name: OPERATOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: RELEASE_VERSION
+              value: "0.0.1-snapshot"
+            - name: SSL_CERT_DIR
+              value: "/etc/pki/tls/certs"
+          command:
+            - /manager
+          args:
+            - "--enable-leader-election"
+          image: quay.io/openshift-psap/special-resource-operator:master #FIXME: update the image
+          name: manager
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            limits:
+              cpu: 300m
+              memory: 500Mi
+            requests:
+              cpu: 300m
+              memory: 500Mi
+          volumeMounts:
+          - name: cache-volume
+            mountPath: /cache
+          - name: cred-volume
+            mountPath: /home/nonroot/.docker
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
+        - name: cred-volume
+          emptyDir: {}
+      serviceAccountName: controller-manager
+      terminationGracePeriodSeconds: 10

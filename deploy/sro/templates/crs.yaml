@@ -1,0 +1,17 @@
+#FIXME: uncomment
+#apiVersion: sro.openshift.io/v1beta1
+#kind: SpecialResource
+#metadata:
+#  name: preamble
+#spec:
+#  chart:
+#    name: preamble
+#    version: 0.0.1
+#    repository:
+#      name: example
+#      url: file:///charts/example/
+#      insecure_skip_tls_verify: false
+#  namespace: preamble
+#  nodeSelector:
+#    node-role.kubernetes.io/worker: ""
+##FIXME: can we remove that CR?
