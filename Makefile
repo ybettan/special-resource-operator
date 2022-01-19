@@ -107,6 +107,7 @@ generate-mocks:
 
 ##@ Deployment
 
+#FIXME: do we need to use the $(NAMESPACE) env here? (I think this is how the CI is deploying into a custom namespace)
 deploy: manifests ## Deploy controller in the configured Kubernetes cluster in ~/.kube/config
 	helm install sro deploy/sro/ -n special-resource-operator --create-namespace \
 		--set deployment.image.name=quay.io/openshift-psap/special-resource-operator \
