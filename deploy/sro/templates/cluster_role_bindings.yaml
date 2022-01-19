@@ -9,5 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: controller-manager
-  #FIXME: remove
-  namespace: ybettan
+  namespace: {{ .Release.Namespace }}

@@ -1,0 +1,4 @@
+deployment:
+  image:
+    name: quay.io/openshift-psap/special-resource-operator
+    tag: master

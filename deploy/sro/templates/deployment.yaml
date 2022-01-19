@@ -33,7 +33,7 @@ spec:
             - /manager
           args:
             - "--enable-leader-election"
-          image: quay.io/openshift-psap/special-resource-operator:master #FIXME: update the image
+          image: {{ .Values.deployment.image.name }}:{{ .Values.deployment.image.tag }}
           name: manager
           securityContext:
             allowPrivilegeEscalation: false
