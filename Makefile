@@ -107,15 +107,14 @@ generate-mocks:
 
 ##@ Deployment
 
-#FIXME: do we need to use the $(NAMESPACE) env here? (I think this is how the CI is deploying into a custom namespace)
 deploy: manifests ## Deploy controller in the configured Kubernetes cluster in ~/.kube/config
-	helm install sro deploy/sro/ -n special-resource-operator --create-namespace \
+	helm install sro deploy/sro/ -n $(NAMESPACE) --create-namespace \
 		--set deployment.image.tag=$(TAG)
 
 # If the CRD is deleted before the CRs the CRD finalizer will hang forever
 # The specialresource finalizer will not execute either
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
-	helm uninstall sro -n special-resource-operator
+	helm uninstall sro -n $(NAMESPACE)
 	$(CLUSTER_CLIENT) delete crd/specialresources.sro.openshift.io #FIXME remove once I configure helm to remove CRDs
 	$(CLUSTER_CLIENT) delete ns/special-resource-operator #FIXME remove once I configure helm to remove namespace on uninstall
 

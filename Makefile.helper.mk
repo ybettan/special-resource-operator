@@ -2,7 +2,7 @@
 # SRO-specific options
 
 SPECIALRESOURCE  ?= driver-container-base
-NAMESPACE        ?= openshift-special-resource-operator
+NAMESPACE        ?= special-resource-operator
 PULLPOLICY       ?= IfNotPresent
 TAG              ?= master
 CSPLIT           ?= csplit - --prefix="" --suppress-matched --suffix-format="%04d.yaml"  /---/ '{*}' --silent
