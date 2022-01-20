@@ -1,10 +1,12 @@
+platform:
+  type: k8s
+
 deployment:
   image:
     name: quay.io/openshift-psap/special-resource-operator
     tag: master
 
-#FIXME: Add OCP objects to the deployment
-#FIXME: set special-resource-operator as the default namespace
+#FIXME: tests the deployent on OCP
 #FIXME: delete namesapce on chart uninstall
 #FIXME: add subchart for NFD
 #FIXME: Update Your Deployments When ConfigMaps or Secrets Change

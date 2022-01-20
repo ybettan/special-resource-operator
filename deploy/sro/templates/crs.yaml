@@ -1,7 +1,8 @@
+#FIXME: can we remove that CR?
 apiVersion: sro.openshift.io/v1beta1
 kind: SpecialResource
 metadata:
-  name: preamble
+  name: {{ .Release.Name }}-preamble
 spec:
   chart:
     name: preamble
@@ -13,4 +14,36 @@ spec:
   namespace: preamble
   nodeSelector:
     node-role.kubernetes.io/worker: ""
-#FIXME: can we remove that CR?
+{{- if eq .Values.platform.type "ocp" }}
+---
+apiVersion: config.openshift.io/v1
+kind: ClusterOperator
+metadata:
+  name: {{ .Release.Name }}-cluster-operator
+spec: {}
+status:
+  versions:
+    - name: operator
+      version: "0.0.1-snapshot"
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: {{ .Release.Name }}-manager-controller-service-monitor
+  namespace: system
+spec:
+  endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      path: /metrics
+      port: https
+      scheme: https
+      interval: 30s
+      tlsConfig:
+        caFile: /etc/prometheus/configmaps/serving-certs-ca-bundle/service-ca.crt
+        serverName: special-resource-controller-manager-metrics-service.openshift-special-resource-operator.svc
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+{{- end }}

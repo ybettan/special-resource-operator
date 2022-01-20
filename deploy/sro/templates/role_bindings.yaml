@@ -9,3 +9,18 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ .Release.Name }}-manager-service-account
+{{- if eq .Values.platform.type "ocp" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-prometheus-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-k8s
+    namespace: openshift-monitoring
+{{ end }}
