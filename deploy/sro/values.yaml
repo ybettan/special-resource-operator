@@ -6,7 +6,6 @@ deployment:
     name: quay.io/openshift-psap/special-resource-operator
     tag: master
 
-#FIXME: tests the deployent on OCP
 #FIXME: delete namesapce on chart uninstall
 #FIXME: Update Your Deployments When ConfigMaps or Secrets Change
 #FIXME: should we find a way to delete CRDs (not CRs) uppon chart uninstall?
