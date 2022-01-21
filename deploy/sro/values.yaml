@@ -8,7 +8,6 @@ deployment:
 
 #FIXME: tests the deployent on OCP
 #FIXME: delete namesapce on chart uninstall
-#FIXME: add subchart for NFD
 #FIXME: Update Your Deployments When ConfigMaps or Secrets Change
 #FIXME: should we find a way to delete CRDs (not CRs) uppon chart uninstall?
 #FIXME: make sure the labels names are consistent with all the rest
