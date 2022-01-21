@@ -69,7 +69,7 @@ spec:
               protocol: TCP
               name: https
           volumeMounts:
-            - name: special-resource-operator-tls
+            - name: {{ .Release.Name }}-tls
               mountPath: /etc/secrets
           resources:
             requests:
@@ -87,9 +87,9 @@ spec:
         - name: cred-volume
           emptyDir: {}
         {{- if eq .Values.platform.type "ocp" }}
-        - name: special-resource-operator-tls
+        - name: {{ .Release.Name }}-tls
           secret:
-            secretName: special-resource-operator-tls #FIXME: did I forget a secret?
+            secretName: {{ .Release.Name }}-tls
         {{- end }}
       serviceAccountName: {{ .Release.Name }}-manager-service-account
       terminationGracePeriodSeconds: 10
