@@ -36,7 +36,7 @@ IMAGE_TAG_BASE ?= quay.io/openshift-psap/special-resource-operator
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
 # Image URL to use all building/pushing image targets
-IMG ?= quay.io/openshift-psap/special-resource-operator:$(TAG)
+IMG ?= $(IMAGE_TAG_BASE):$(TAG)
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
@@ -109,6 +109,7 @@ generate-mocks:
 
 deploy: manifests ## Deploy controller in the configured Kubernetes cluster in ~/.kube/config
 	helm install sro deploy/sro/ -n $(NAMESPACE) --create-namespace \
+		--set deployment.image.name=$(IMAGE_TAG_BASE) \
 		--set deployment.image.tag=$(TAG)
 
 # If the CRD is deleted before the CRs the CRD finalizer will hang forever
