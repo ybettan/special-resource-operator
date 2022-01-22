@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-manager-controller
   labels:
-    control-plane: controller-manager
+    control-plane: manager-controller
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
+      control-plane: manager-controller
   replicas: 1
   template:
     metadata:
       labels:
-        control-plane: controller-manager
+        control-plane: manager-controller
     spec:
       securityContext:
         runAsNonRoot: true

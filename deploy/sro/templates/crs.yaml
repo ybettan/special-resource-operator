@@ -30,7 +30,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    control-plane: controller-manager
+    control-plane: manager-controller
   name: {{ .Release.Name }}-manager-controller-service-monitor
 spec:
   endpoints:

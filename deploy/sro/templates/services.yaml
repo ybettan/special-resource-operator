@@ -4,7 +4,7 @@ metadata:
   annotations:
     service.beta.openshift.io/serving-cert-secret-name: {{ .Release.Name }}-tls
   labels:
-    control-plane: controller-manager
+    control-plane: manager-controller
   name: {{ .Release.Name }}-manager-controller-metrics-service
 spec:
   ports:
@@ -13,4 +13,4 @@ spec:
       port: 8443
       targetPort: https
   selector:
-    control-plane: controller-manager
+    control-plane: manager-controller
