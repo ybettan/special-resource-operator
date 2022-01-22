@@ -10,3 +10,4 @@ deployment:
 #FIXME: Update Your Deployments When ConfigMaps or Secrets Change
 #FIXME: should we find a way to delete CRDs (not CRs) uppon chart uninstall?
 #FIXME: should I update the bundle?
+#FIXME: remove config/ ?
