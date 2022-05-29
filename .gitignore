@@ -1,6 +1,10 @@
 # Bundle files are generated
 bundle
 
+# Operator's binaries
+manager
+
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
