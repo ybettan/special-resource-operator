@@ -57,6 +57,8 @@ SRO manages a subdirectory inside Go's [`os.UserCacheDir`](https://pkg.go.dev/os
 
 # Creating a special resource recipe
 
+For most updated examples and use cases please see [docs/lab/README.md](docs/lab/README.md).
+
 See [docs/recipes.md](docs/recipes.md) for instructions on how to create a recipe for SRO to manage. 
 
 See `charts/example` for some examples. In particular:
